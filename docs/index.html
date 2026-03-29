@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sipper — 3 APIs. That's it.</title>
+  <style>
+    :root { --bg: #0d1117; --surface: #161b22; --border: #30363d; --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --orange: #d29922; --code-bg: #1c2128; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+    pre { background: var(--code-bg); padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.5; border: 1px solid var(--border); }
+    pre code { background: none; padding: 0; }
+
+    .hero { text-align: center; padding: 80px 20px 60px; }
+    .hero h1 { font-size: 3.5em; margin-bottom: 8px; }
+    .hero h1 span { color: var(--accent); }
+    .hero .tagline { font-size: 1.3em; color: var(--muted); margin-bottom: 32px; }
+    .hero .install { display: inline-block; background: var(--surface); border: 1px solid var(--border); padding: 12px 24px; border-radius: 8px; font-family: monospace; font-size: 1.1em; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    .api-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 48px 0; }
+    .api-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .api-card h3 { color: var(--accent); font-family: monospace; font-size: 1.1em; margin-bottom: 8px; }
+    .api-card p { color: var(--muted); font-size: 0.95em; }
+
+    section { padding: 48px 0; }
+    section h2 { font-size: 1.8em; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    section h3 { font-size: 1.2em; margin: 24px 0 12px; }
+    section p { color: var(--muted); margin-bottom: 16px; }
+
+    .comparison { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .comparison th, .comparison td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .comparison th { color: var(--muted); font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; }
+    .comparison td:first-child { font-weight: bold; }
+    .comparison .us { color: var(--green); }
+
+    .nav { display: flex; gap: 24px; justify-content: center; margin: 32px 0; flex-wrap: wrap; }
+    .nav a { background: var(--surface); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; transition: border-color 0.2s; }
+    .nav a:hover { border-color: var(--accent); text-decoration: none; }
+
+    .principle { margin-bottom: 16px; }
+    .principle strong { color: var(--text); }
+    .principle span { color: var(--muted); }
+
+    footer { text-align: center; padding: 48px 20px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 48px; }
+
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 2.2em; }
+      .api-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>🥤 <span>Sipper</span></h1>
+    <p class="tagline">A reactive UI framework with 3 APIs. That's it.</p>
+    <div class="install">npm install sipperjs</div>
+  </div>
+
+  <div class="container">
+
+    <div class="api-grid">
+      <div class="api-card">
+        <h3>state(value)</h3>
+        <p>Create reactive state. Returns [getter, setter]. Primitives, objects, arrays — one function for all.</p>
+      </div>
+      <div class="api-card">
+        <h3>control(fn)</h3>
+        <p>The single lifecycle mechanism. Setup, reactive subscriptions, and cleanup — all in one.</p>
+      </div>
+      <div class="api-card">
+        <h3>snapshot(value)</h3>
+        <p>Escape hatch. Freeze a value so it never updates. Opt out of reactivity when you need to.</p>
+      </div>
+    </div>
+
+    <div class="nav">
+      <a href="#quick-start">Quick Start</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#comparison">vs React / Solid / Vue</a>
+      <a href="#benchmarks">Benchmarks</a>
+      <a href="https://github.com/vamshisuram/sipperjs">GitHub</a>
+      <a href="https://www.npmjs.com/package/sipperjs">npm</a>
+    </div>
+
+    <section id="quick-start">
+      <h2>Quick Start</h2>
+<pre><code><span style="color:var(--accent)">import</span> { h, state, control, mount } <span style="color:var(--accent)">from</span> <span style="color:var(--green)">'sipperjs'</span>
+
+<span style="color:var(--accent)">function</span> <span style="color:var(--orange)">Counter</span>() {
+  <span style="color:var(--accent)">const</span> [getCount, setCount] = state(<span style="color:var(--orange)">0</span>)
+  <span style="color:var(--accent)">const</span> doubled = getCount() * <span style="color:var(--orange)">2</span>  <span style="color:var(--muted)">// auto-reactive</span>
+
+  <span style="color:var(--accent)">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;Count: {getCount()}&lt;/p&gt;
+      &lt;p&gt;Doubled: {doubled}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+mount(Counter, document.getElementById(<span style="color:var(--green)">'app'</span>))</code></pre>
+
+      <p>That's a complete Sipper app. The component runs <strong>once</strong>. State changes update the DOM surgically — no re-renders, no VDOM diffing.</p>
+    </section>
+
+    <section id="how-it-works">
+      <h2>How It Works</h2>
+
+      <h3>Components run once</h3>
+      <p>Unlike React, Sipper components are functions that execute once. The JSX creates a static template with reactive bindings. When state changes, only the affected DOM nodes update — no reconciliation, no diffing.</p>
+
+      <h3>Derived values are plain functions</h3>
+<pre><code><span style="color:var(--accent)">const</span> doubled = getCount() * <span style="color:var(--orange)">2</span>       <span style="color:var(--muted)">// build transform wraps this</span>
+<span style="color:var(--accent)">const</span> quadrupled = doubled * <span style="color:var(--orange)">2</span>     <span style="color:var(--muted)">// cascades like a spreadsheet</span></code></pre>
+      <p>A lightweight build-time transform detects variables referencing state and wraps them in arrow functions. Zero runtime cost. The developer writes plain JavaScript — the framework handles the wiring.</p>
+
+      <h3>control() is the entire lifecycle</h3>
+<pre><code><span style="color:var(--muted)">// Setup — runs once</span>
+control(() =&gt; {
+  console.log(<span style="color:var(--green)">'mounted'</span>)
+  <span style="color:var(--accent)">return</span> () =&gt; console.log(<span style="color:var(--green)">'unmounted'</span>)
+})
+
+<span style="color:var(--muted)">// Reactive — re-runs when deps change</span>
+control(() =&gt; {
+  document.title = <span style="color:var(--green)">`Count: ${getCount()}`</span>
+})
+
+<span style="color:var(--muted)">// External resources — auto-cleaned</span>
+control(() =&gt; {
+  <span style="color:var(--accent)">const</span> id = setInterval(tick, <span style="color:var(--orange)">1000</span>)
+  <span style="color:var(--accent)">return</span> () =&gt; clearInterval(id)
+})</code></pre>
+      <p>No <code>onMount</code>. No <code>onCleanup</code>. No <code>useEffect</code>. The component function body IS setup. <code>control()</code> handles subscriptions and cleanup. Ownership scopes auto-dispose everything on unmount.</p>
+
+      <h3>SSR-first</h3>
+<pre><code><span style="color:var(--muted)">// Server</span>
+<span style="color:var(--accent)">import</span> { renderToString } <span style="color:var(--accent)">from</span> <span style="color:var(--green)">'sipperjs/server'</span>
+<span style="color:var(--accent)">const</span> { html, state } = renderToString(App)
+
+<span style="color:var(--muted)">// Client</span>
+<span style="color:var(--accent)">import</span> { hydrate } <span style="color:var(--accent)">from</span> <span style="color:var(--green)">'sipperjs'</span>
+hydrate(App, document.getElementById(<span style="color:var(--green)">'app'</span>))</code></pre>
+      <p>Same components run on server and client. State is serialized, transferred, and restored — no recomputation, instant interactivity.</p>
+
+      <h3>Event delegation</h3>
+      <p>One listener per event type on the document — not per element. 1000 buttons? Still just one click listener. Faster renders, less memory, automatic cleanup.</p>
+
+      <h3>Provide / Inject</h3>
+<pre><code><span style="color:var(--muted)">// Parent — provides to entire subtree</span>
+provide(<span style="color:var(--green)">'theme'</span>, getTheme)
+
+<span style="color:var(--muted)">// Any descendant — no prop drilling</span>
+<span style="color:var(--accent)">const</span> getTheme = inject(<span style="color:var(--green)">'theme'</span>)</code></pre>
+    </section>
+
+    <section id="comparison">
+      <h2>Why Sipper?</h2>
+      <table class="comparison">
+        <tr>
+          <th></th>
+          <th>React</th>
+          <th>Solid</th>
+          <th>Vue</th>
+          <th class="us">Sipper</th>
+        </tr>
+        <tr>
+          <td>API concepts to learn</td>
+          <td>15+ hooks</td>
+          <td>6+ primitives</td>
+          <td>8+ (ref, reactive, computed...)</td>
+          <td class="us">3</td>
+        </tr>
+        <tr>
+          <td>Re-renders</td>
+          <td>Every state change</td>
+          <td>None</td>
+          <td>Component-level</td>
+          <td class="us">None</td>
+        </tr>
+        <tr>
+          <td>VDOM</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+          <td class="us">No</td>
+        </tr>
+        <tr>
+          <td>Lifecycle hooks</td>
+          <td>useEffect + deps arrays</td>
+          <td>onMount, onCleanup, createEffect</td>
+          <td>onMounted, onUnmounted, watch...</td>
+          <td class="us">control() — one function</td>
+        </tr>
+        <tr>
+          <td>Derived state</td>
+          <td>useMemo + deps</td>
+          <td>createMemo</td>
+          <td>computed()</td>
+          <td class="us">Plain functions</td>
+        </tr>
+        <tr>
+          <td>SSR</td>
+          <td>Separate (Next.js)</td>
+          <td>SolidStart</td>
+          <td>Nuxt</td>
+          <td class="us">Built-in</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="benchmarks">
+      <h2>Benchmarks</h2>
+      <p>JS Framework Benchmark operations — 1000 rows. Vanilla JS (hand-optimized surgical DOM) is the theoretical speed ceiling.</p>
+      <table class="comparison">
+        <tr>
+          <th>Operation</th>
+          <th class="us">Sipper</th>
+          <th>React 19</th>
+          <th>Solid.js</th>
+          <th>Vanilla JS</th>
+          <th>Sipper vs Vanilla</th>
+        </tr>
+        <tr><td>Create 1K</td><td class="us">32.8ms</td><td>75.6ms</td><td>30.5ms</td><td>31.8ms</td><td style="color:var(--green)">1.03x</td></tr>
+        <tr><td>Update every 10th</td><td class="us">15.0ms</td><td>19.8ms</td><td>33.4ms</td><td>14.9ms</td><td style="color:var(--green)">1.01x</td></tr>
+        <tr><td>Delete row</td><td class="us">3.2ms</td><td>10.6ms</td><td>35.1ms</td><td>2.5ms</td><td style="color:var(--green)">1.28x</td></tr>
+        <tr><td>Append 1K</td><td class="us">52.8ms</td><td>55.4ms</td><td>72.8ms</td><td>34.1ms</td><td style="color:var(--green)">1.55x</td></tr>
+        <tr><td>Create 10K</td><td class="us">317.6ms</td><td>849.4ms</td><td>329.5ms</td><td>347.0ms</td><td style="color:var(--green)">0.92x</td></tr>
+        <tr><td>Select row</td><td class="us">0.8ms</td><td>2.5ms</td><td>35.0ms</td><td>0.2ms</td><td style="color:var(--orange)">4.00x</td></tr>
+        <tr><td>Swap rows</td><td class="us">38.8ms</td><td>57.5ms</td><td>33.6ms</td><td>2.8ms</td><td style="color:var(--orange)">13.86x</td></tr>
+      </table>
+      <p style="font-size:0.85em; margin-top:8px">Run benchmarks locally: <code>cd examples/benchmark && npm run dev</code> → open <code>/benchmark/</code></p>
+    </section>
+
+    <section>
+      <h2>Design Principles</h2>
+      <div class="principle"><strong>One concept &gt; many concepts</strong> — <span><code>state()</code> replaces useState, useRef, useMemo, createSignal, ref, reactive, computed</span></div>
+      <div class="principle"><strong>JavaScript is the abstraction</strong> — <span>Functions are derivations. Closures are refs. No new primitives to learn.</span></div>
+      <div class="principle"><strong>Components run once</strong> — <span>No re-renders, no dependency arrays, no stale closures.</span></div>
+      <div class="principle"><strong>The framework prevents mistakes</strong> — <span>Automatic cleanup, ownership scopes, immutable getters.</span></div>
+      <div class="principle"><strong>SSR is the default</strong> — <span>Not an afterthought. Same components, server and client.</span></div>
+      <div class="principle"><strong>Names say what they do</strong> — <span><code>control</code> not <code>effect</code>. <code>getCount()</code> not <code>count.value</code>.</span></div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>Sipper — built from first principles.<br>
+    <a href="https://github.com/vamshisuram/sipperjs">GitHub</a> · <a href="https://www.npmjs.com/package/sipperjs">npm</a> · <a href="#benchmarks">Benchmarks</a></p>
+  </footer>
+
+</body>
+</html>
