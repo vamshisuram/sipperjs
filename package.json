@@ -1,0 +1,43 @@
+{
+  "name": "sipperjs",
+  "version": "0.1.0",
+  "description": "A reactive UI framework with 3 APIs: state(), control(), snapshot(). SSR-first, no VDOM, no hooks.",
+  "type": "module",
+  "main": "./src/runtime.js",
+  "exports": {
+    ".": "./src/runtime.js",
+    "./server": "./src/server.js",
+    "./devtools": "./src/devtools.js",
+    "./plugin": "./plugin/reactive-jsx.js"
+  },
+  "files": [
+    "src/",
+    "plugin/",
+    "README.md"
+  ],
+  "keywords": [
+    "frontend",
+    "framework",
+    "reactive",
+    "signals",
+    "ssr",
+    "jsx",
+    "no-vdom",
+    "ui"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vamshisuram/sipperjs"
+  },
+  "homepage": "https://github.com/vamshisuram/sipperjs#readme",
+  "peerDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-react-jsx": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@babel/core": { "optional": true },
+    "@babel/plugin-transform-react-jsx": { "optional": true }
+  }
+}
